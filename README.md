@@ -6,6 +6,12 @@
 
 A simple, elegant, and fully functional Todo List application built with React Native, Expo, and TypeScript. 
 
+<p align="center">
+  <img src="images/Ekran%20g%C3%B6r%C3%BCnt%C3%BCs%C3%BC%202026-08-12%20160108.png" width="250" />
+  <img src="images/Ekran%20g%C3%B6r%C3%BCnt%C3%BCs%C3%BC%202026-08-12%20160138.png" width="250" />
+  <img src="images/Ekran%20g%C3%B6r%C3%BCnt%C3%BCs%C3%BC%202026-08-12%20160157.png" width="250" />
+</p>
+
 ---
 
 ## 🇹🇷 Türkçe (Turkish)
