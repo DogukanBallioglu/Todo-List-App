@@ -1,69 +1,74 @@
-# 📝 Todo List App
+# 📝 Todo List App (React Native & Expo)
 
-*(Scroll down for English)*
+![React Native](https://img.shields.io/badge/React_Native-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Expo](https://img.shields.io/badge/Expo-000020?style=for-the-badge&logo=expo&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
 
-## 🇹🇷 Türkçe
+A simple, elegant, and fully functional Todo List application built with React Native, Expo, and TypeScript. 
 
-React Native ve Expo kullanılarak geliştirilmiş modern bir Yapılacaklar Listesi (Todo List) uygulaması.
+---
 
-### 🚀 Desteklenen Özellikler ve Teknolojiler
-*   **Çoklu Platform Desteği:** iOS, Android ve Web platformlarında sorunsuz bir şekilde çalışabilir (Expo altyapısı sayesinde).
-*   **Modern Yönlendirme (Routing):** Uygulama içi sekme (tab) ve sayfa geçişleri için modern dosya tabanlı yönlendirici olan **Expo Router** (`app/` dizini) kullanılmıştır.
-*   **Tip Güvenliği (Type Safety):** Kod hatalarını daha yazım aşamasında en aza indirmek için **TypeScript** (`.ts`, `.tsx` uzantılı dosyalar) kullanılmıştır.
-*   **Tema Desteği (Karanlık/Aydınlık Mod):** Kullanıcının cihaz ayarlarına uyum sağlayan **Karanlık (Dark) ve Aydınlık (Light) Tema** desteği bulunur (`hooks/use-color-scheme.ts` ve `constants/theme.ts` dosyaları).
-*   **Modüler Mimari:** Yeniden kullanılabilir kullanıcı arayüzü bileşenleri (`components/`) ve özel kancalar (`hooks/`) ile düzenli bir kod yapısına sahiptir.
+## 🇹🇷 Türkçe (Turkish)
 
-### 🛠️ Kurulum ve Çalıştırma
-Projeyi bilgisayarınızda çalıştırmak için aşağıdaki adımları sırasıyla izleyebilirsiniz:
+### 📌 Özellikler
+- **Görev Ekleme:** Bitiş tarihi (due date) ile birlikte yeni görevler ekleyin.
+- **Görev Düzenleme:** Mevcut görevlerin başlıklarını güncelleyin.
+- **Görev Silme:** İstemediğiniz görevleri kolayca silin.
+- **Durum Değiştirme:** Görevleri tek tıklamayla "Tamamlandı" veya "Aktif" olarak işaretleyin.
+- **Filtreleme:** Görevleri "Tümü", "Aktif" veya "Tamamlananlar" olarak filtreleyin.
+- **İlerleme Çubuğu:** Tamamlanan görevlerin yüzdesini ilerleme çubuğu ile görsel olarak takip edin.
+- **Yerel Depolama (Local Storage):** Uygulamayı kapatsanız bile verileriniz `AsyncStorage` ile güvende kalır.
 
-1. Terminalinizi açın ve proje dizinine gidin.
-2. Gerekli kütüphaneleri (bağımlılıkları) yükleyin:
-   ```bash
-   npm install
-   ```
-3. Expo sunucusunu başlatarak uygulamayı çalıştırın:
-   ```bash
-   npx expo start
-   ```
+### 🛠 Kullanılan Teknolojiler
+- **Framework:** React Native & Expo
+- **Dil:** TypeScript
+- **Depolama:** `@react-native-async-storage/async-storage`
+- **Tarih Seçici:** `@react-native-community/datetimepicker`
+- **İkonlar:** `@expo/vector-icons` (Ionicons)
 
 ---
 
 ## 🇬🇧 English
 
-A modern cross-platform Todo List application built using React Native and Expo.
+### 📌 Features
+- **Add Tasks:** Create new tasks with a due date.
+- **Edit Tasks:** Update the titles of existing tasks.
+- **Delete Tasks:** Easily remove unwanted tasks.
+- **Toggle Status:** Mark tasks as "Completed" or "Active" with a single tap.
+- **Filtering:** Filter your tasks by "All", "Active", or "Completed".
+- **Progress Bar:** Visually track the percentage of completed tasks with a progress bar.
+- **Local Storage:** Your data is safe even if you close the app, thanks to `AsyncStorage`.
 
-### 🚀 Supported Features and Technologies
-*   **Cross-Platform Support:** Seamlessly runs on iOS, Android, and Web platforms (powered by the Expo framework).
-*   **Modern Routing:** Uses **Expo Router** (file-based navigation in the `app/` directory) for smooth tab and page transitions.
-*   **Type Safety:** Built with **TypeScript** (`.ts` and `.tsx` files) to minimize runtime errors and improve code quality.
-*   **Theme Support (Dark/Light Mode):** Includes built-in support for **Dark and Light themes** that adapt to the user's device settings (handled via `hooks/use-color-scheme.ts` and `constants/theme.ts`).
-*   **Modular Architecture:** Maintains a clean codebase with reusable UI components (`components/`) and custom hooks (`hooks/`).
-
-### 🛠️ Getting Started
-To run the project on your local machine, please follow these step-by-step instructions:
-
-1. Open your terminal and navigate to the project directory.
-2. Install the required dependencies:
-   ```bash
-   npm install
-   ```
-3. Start the Expo development server:
-   ```bash
-   npx expo start
-   ```
+### 🛠 Tech Stack
+- **Framework:** React Native & Expo
+- **Language:** TypeScript
+- **Storage:** `@react-native-async-storage/async-storage`
+- **Date Picker:** `@react-native-community/datetimepicker`
+- **Icons:** `@expo/vector-icons` (Ionicons)
 
 ---
 
-## 🖼️ Uygulama Görselleri / Project Assets
+## 🚀 Kurulum & Çalıştırma (Installation & Running)
 
-Aşağıda projenin `assets/images/` dizininde bulunan görseller yer almaktadır:
+Projeyi bilgisayarınızda çalıştırmak için aşağıdaki adımları izleyin:
+Follow these steps to run the project locally:
 
-| Icon | Favicon | Splash Icon |
-|:---:|:---:|:---:|
-| <img src="assets/images/icon.png" width="100"> | <img src="assets/images/favicon.png" width="100"> | <img src="assets/images/splash-icon.png" width="100"> |
-| `icon.png` | `favicon.png` | `splash-icon.png` |
+1. **Repoyu klonlayın (Clone the repository):**
+   ```bash
+   git clone https://github.com/DogukanBallioglu/Todo-List-App.git
+   cd Todo-List-App
+   ```
 
-| React Logo | Android Background | Android Foreground |
-|:---:|:---:|:---:|
-| <img src="assets/images/react-logo.png" width="100"> | <img src="assets/images/android-icon-background.png" width="100"> | <img src="assets/images/android-icon-foreground.png" width="100"> |
-| `react-logo.png` | `android-icon-background.png` | `android-icon-foreground.png` |
+2. **Bağımlılıkları yükleyin (Install dependencies):**
+   ```bash
+   npm install
+   ```
+
+3. **Uygulamayı başlatın (Start the app):**
+   ```bash
+   npm start
+   ```
+
+4. **Kullanım (Usage):**
+   - Tarayıcınızda veya Expo Go uygulamasında açılan karekodu okutarak cihazınızda test edebilirsiniz.
+   - Scan the QR code with the Expo Go app on your device to test it.
