@@ -1,98 +1,294 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import AddTask from "@/components/add-task";
+import EditModal from "@/components/edit-modal";
+import FilterBar from "@/components/filter-bar";
+import Header from "@/components/header";
+import TaskItem from "@/components/task-item";
+import { Colors } from "@/constants/colors";
+import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { useEffect, useState } from "react";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+type Task = {
+  id: number,
+  title: string,
+  isCompleted: boolean,
+  dueDate: string;
+}
 
-export default function HomeScreen() {
+function MainScreen() {
+  const [filter, setFilter] = useState<
+    "all" | "completed" | "active"
+  >("all");
+
+  const [listItem, setListItem] = useState<Task[]>([]);
+
+  const saveTasks = async () => {
+    try {
+      await AsyncStorage.setItem(
+        "tasks",
+        JSON.stringify(listItem)
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const loadTasks = async () => {
+    try {
+      const data = await AsyncStorage.getItem("tasks");
+
+      if (data) {
+        setListItem(JSON.parse(data));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    loadTasks();
+  }, []);
+
+  useEffect(() => {
+    saveTasks();
+  }, [listItem]);
+
+  const [title, setTitle] = useState("");
+  const [date, setDate] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false); 
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [editingTaskId, setEditingTaskId] = useState<number | null>(null);
+  const [editTitle, setEditTitle] = useState("");
+
+  const filteredListItem = listItem.filter((item) => {
+    if (filter === "completed") return item.isCompleted;
+    if (filter === "active") return !item.isCompleted;
+    return true;
+  });
+
+  const handleToggle = (id: number) => {
+    setListItem((prev) =>
+      prev.map((item) =>
+        item.id === id
+          ? { ...item, isCompleted: !item.isCompleted }
+          : item
+      )
+    );
+  };
+
+  const handleDelete = (id: number) => {
+    setListItem((prev) =>
+      prev.filter((item) => item.id !== id)
+    );
+  };
+
+  const handleEdit = (id: number) => {
+    const task = listItem.find((item) => item.id === id);
+
+    if (!task) return;
+
+    setEditingTaskId(id);
+    setEditTitle(task.title);
+    setIsModalVisible(true);
+  };
+
+  const handleAdd = () => {
+    if (!title.trim()) return;
+
+    const newTask = {
+      id: Date.now(),
+      title: title.trim(),
+      isCompleted: false,
+      dueDate: date.toISOString(),
+    };
+
+    setListItem((prev) => [...prev, newTask]);
+    setTitle("");
+    setDate(new Date());
+  };
+
+
+  const handleSave = () => {
+    if (editingTaskId === null) return;
+
+    setListItem((prev) =>
+      prev.map((item) =>
+        item.id === editingTaskId
+          ? {
+            ...item,
+            title: editTitle.trim(),
+          }
+          : item
+      )
+    );
+
+    setIsModalVisible(false);
+    setEditingTaskId(null);
+    setEditTitle("");
+  };
+
+  const toplamGorevSayisi = listItem.length;
+
+  const tamamlananGorevSayisi = listItem.filter(
+    (item) => item.isCompleted
+  ).length;
+
+  const kalanGorevSayisi =
+    toplamGorevSayisi - tamamlananGorevSayisi;
+
+  const progress = toplamGorevSayisi === 0
+    ? 0
+    : (tamamlananGorevSayisi / toplamGorevSayisi) * 100;
+
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+    <View style={styles.screen}>
+      <Header
+        total={toplamGorevSayisi}
+        completed={tamamlananGorevSayisi}
+        active={kalanGorevSayisi}
+      />
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+      <View style={styles.progressContainer}>
+        <View style={styles.progressBar}>
+          <View
+            style={[
+              styles.progressFill,
+              { width: `${progress}%` },
+            ]}
+          />
+        </View>
+
+        <Text style={styles.progressText}>
+          %{Math.round(progress)}
+        </Text>
+      </View>
+
+      <FilterBar
+        filter={filter}
+        onChangeFilter={setFilter}
+      />
+
+      <FlatList
+        data={filteredListItem}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
+          <TaskItem
+            title={item.title}
+            date={item.dueDate}
+            completed={item.isCompleted}
+            onToggle={() => handleToggle(item.id)}
+            onDelete={() => handleDelete(item.id)}
+            onEdit={() => handleEdit(item.id)}
+          />
+        )}
+        ListEmptyComponent={
+          <View style={styles.emptyContainer}>
+            <Ionicons name="document-text-outline" size={70} style={{ marginBottom: 10 }} />
+            {filter === "completed" && <Text style={styles.emptyText}> Tamamlanan görev bulunamadı.</Text>}
+            {filter === "active" && <Text style={styles.emptyText}> Kalan görev bulunamadı.</Text>}
+            {
+              filter === "all" &&
+              (<>
+                <Text style={styles.emptyText}> Henüz görev eklenmedi.</Text>
+                <Text style={[styles.emptyText, { color: Colors.danger }]}> Aşağıdan görev ekleyebilirsiniz. </Text>
+              </>)
+
+
+            }
+          </View>
+        }
+      />
+
+      <AddTask
+        title={title}
+        date={date}
+        showDatePicker={showDatePicker}
+        onOpenDatePicker={() => setShowDatePicker(true)}
+        onCloseDatePicker={() => setShowDatePicker(false)}
+        onChangeDate={setDate}
+        onChangeTitle={setTitle}
+        onAdd={handleAdd}
+      />
+
+      <EditModal
+        visible={isModalVisible}
+        title={editTitle}
+        onChangeTitle={setEditTitle}
+        onClose={() => setIsModalVisible(false)}
+        onSave={handleSave}
+      />
+
+      {showDatePicker && (
+        <DateTimePicker
+          value={date}
+          mode="date"
+          display="default"
+          onChange={(event, selectedDate) => {
+            setShowDatePicker(false);
+
+            if (selectedDate) {
+              setDate(selectedDate);
+            }
+          }}
+        />
+      )}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  screen: {
+    flex: 1,
+    backgroundColor: Colors.background,
+    paddingHorizontal: 20,
+    paddingTop: 20,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+
+  taskList: {
+    paddingBottom: 20,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+
+  emptyContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 50,
+  },
+
+  emptyText: {
+    fontSize: 18,
+    color: Colors.textSecondary,
+  },
+
+  progressContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    marginVertical: 15,
+  },
+
+  progressBar: {
+    flex: 1,
+    height: 12,
+    backgroundColor: Colors.border,
+    borderRadius: 10,
+    overflow: "hidden",
+  },
+
+  progressFill: {
+    height: "100%",
+    backgroundColor: Colors.secondary,
+    borderRadius: 10,
+  },
+
+  progressText: {
+    width: 40, // Yüzde için sabit alan
+    fontSize: 16,
+    fontWeight: "600",
+    color: Colors.primary,
   },
 });
+
+export default MainScreen;
